@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -85,22 +86,29 @@ fun ProfileImg(imgUrl: String, modifier: Modifier = Modifier){
         .asBitmap()
         .load(imgUrl)
         .into(object : CustomTarget<Bitmap>(){
-            override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+            override fun onResourceReady(
+                resource: Bitmap,
+                transition: Transition<in Bitmap>?
+            ) {
                 bitmap.value = resource
             }
-            override fun onLoadCleared(placeholder: Drawable?) { }
+            override fun onLoadCleared(
+                placeholder: Drawable?
+            ) { }
         })
 
     // 비트 맵이 있다면
     bitmap.value?.asImageBitmap()?.let { fetchedBitmap ->
-        Image(bitmap = fetchedBitmap,
+        Image(
+            bitmap = fetchedBitmap,
             contentScale = ContentScale.Fit,
             contentDescription = null,
             modifier = imageModifier
         )
-    } ?: Image(painter = painterResource(id = R.drawable.ic_empty_user_img),
-        contentScale = ContentScale.Fit,
-        contentDescription = null,
-        modifier = imageModifier
-    )
+    } ?: Image(
+            painter = painterResource(id = R.drawable.ic_empty_user_img),
+            contentScale = ContentScale.Fit,
+            contentDescription = null,
+            modifier = imageModifier
+        )
 }
