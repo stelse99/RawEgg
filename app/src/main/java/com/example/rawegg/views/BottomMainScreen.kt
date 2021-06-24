@@ -40,7 +40,7 @@ sealed class BottomNavigationMenu (
 }
 
 sealed class ScaryAnimation(val animId: Int){
-    object Frankendroid: ScaryAnimation(R.raw.frankensteindroid)
+    //object Frankendroid: ScaryAnimation(R.raw.frankensteindroid)
     object Pumpkin: ScaryAnimation(R.raw.jackolantern)
     object Ghost: ScaryAnimation(R.raw.ghost)
     object ScaryBag: ScaryAnimation(R.raw.bag)
