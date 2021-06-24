@@ -2,6 +2,8 @@ package com.example.rawegg.views
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cake
@@ -16,12 +18,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import com.airbnb.lottie.LottieAnimationView
 import com.airbnb.lottie.LottieDrawable
 import com.example.rawegg.R
+import com.example.rawegg.utils.DummyDataProvider
 
 // 2021.06.24 suchang Renamed VectorAsset to ImageVector
 sealed class BottomNavigationMenu (
@@ -71,7 +75,8 @@ private fun RawEggBottomNavigationConfigurations(
         startDestination = BottomNavigationMenu.Frankendroid.route
     ) {
         composable(BottomNavigationMenu.Frankendroid.route) {
-            ScaryScreen(ScaryAnimation.Frankendroid)
+            //ScaryScreen(ScaryAnimation.Frankendroid)
+            RandomUserListView(randomUsers = DummyDataProvider.userList)
         }
         composable(BottomNavigationMenu.Pumpkin.route) {
             ScaryScreen(ScaryAnimation.Pumpkin)
@@ -86,27 +91,6 @@ private fun RawEggBottomNavigationConfigurations(
 }
 
 @Composable
-fun ScaryScreen(
-    scaryAnimation: ScaryAnimation
-) {
-    // 2021.06.24 suchang Renamed ContextAmbient to LocalContext
-    val context = LocalContext.current
-    val customView = remember { LottieAnimationView(context) }
-    // Adds view to Compose
-    AndroidView({ customView },
-        modifier = Modifier.background(Color.Black)
-    ) { view ->
-        // View's been inflated - add logic here if necessary
-        with(view) {
-            setAnimation(scaryAnimation.animId)
-            playAnimation()
-            repeatMode = LottieDrawable.REVERSE
-        }
-    }
-}
-
-
-@Composable
 private fun RawEggBottomNavigation(
     navController: NavHostController,
     items: List<BottomNavigationMenu>
@@ -116,13 +100,15 @@ private fun RawEggBottomNavigation(
         val currentRoute = CurrentRoute(navController)
         items.forEach { screen ->
             BottomNavigationItem(
-                selectedContentColor = Color.Green,
-                unselectedContentColor = Color.Black,
+                selectedContentColor = Color.White,
+                unselectedContentColor = Color.DarkGray,
                 icon = {
                     Icon(
                         imageVector = screen.icon,
                         contentDescription=screen.route,
                         modifier = Modifier
+                            .height(40.dp)
+                            .width(40.dp)
                     )
                 },
                 label = { Text(stringResource(id = screen.resourceId)) },
@@ -144,5 +130,24 @@ private fun CurrentRoute(navController: NavHostController): String? {
     return navBackStackEntry?.destination?.route
 }
 
+@Composable
+fun ScaryScreen(
+    scaryAnimation: ScaryAnimation
+) {
+    // 2021.06.24 suchang Renamed ContextAmbient to LocalContext
+    val context = LocalContext.current
+    val customView = remember { LottieAnimationView(context) }
+    // Adds view to Compose
+    AndroidView({ customView },
+        modifier = Modifier.background(Color.Black)
+    ) { view ->
+        // View's been inflated - add logic here if necessary
+        with(view) {
+            setAnimation(scaryAnimation.animId)
+            playAnimation()
+            repeatMode = LottieDrawable.REVERSE
+        }
+    }
+}
 
 
