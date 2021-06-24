@@ -89,7 +89,7 @@ private fun RawEggBottomNavigationConfigurations(
 fun ScaryScreen(
     scaryAnimation: ScaryAnimation
 ) {
-    //2021.06.24 suchang Renamed ContextAmbient to LocalContext
+    // 2021.06.24 suchang Renamed ContextAmbient to LocalContext
     val context = LocalContext.current
     val customView = remember { LottieAnimationView(context) }
     // Adds view to Compose
@@ -111,13 +111,20 @@ private fun RawEggBottomNavigation(
     navController: NavHostController,
     items: List<BottomNavigationMenu>
 ) {
+    // 2021.06.24 suchang Change Icon parameters to specification value.
     BottomNavigation {
         val currentRoute = CurrentRoute(navController)
         items.forEach { screen ->
             BottomNavigationItem(
-                selectedContentColor=Color.Green,
+                selectedContentColor = Color.Green,
                 unselectedContentColor = Color.Black,
-                icon = { Icon(screen.icon) },
+                icon = {
+                    Icon(
+                        imageVector = screen.icon,
+                        contentDescription=screen.route,
+                        modifier = Modifier
+                    )
+                },
                 label = { Text(stringResource(id = screen.resourceId)) },
                 selected = currentRoute == screen.route,
                 onClick = {
@@ -126,8 +133,7 @@ private fun RawEggBottomNavigation(
                     if (currentRoute != screen.route) {
                         navController.navigate(screen.route)
                     }
-                }
-            )
+                })
         }
     }
 }

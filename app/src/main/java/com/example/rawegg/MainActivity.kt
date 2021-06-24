@@ -19,7 +19,6 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
                     BottomNavigationScreen()
-                    Greeting("Android")
                 }
             }
         }
@@ -35,6 +34,7 @@ fun Greeting(name: String) {
 @Composable
 fun DefaultPreview() {
     RawEggTheme {
-        Greeting("Android")
+        //Greeting("Android")
+            BottomNavigationScreen()
     }
 }
