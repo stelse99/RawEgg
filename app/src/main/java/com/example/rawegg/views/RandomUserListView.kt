@@ -82,6 +82,9 @@ fun ProfileImg(imgUrl: String, modifier: Modifier = Modifier){
 //        .clip(RoundedCornerShape(10.dp))
         .clip(CircleShape)
 
+    // 2021.06.25 suchang How find R.drawable at the sub packages!!!
+    val emptyImg = com.example.rawegg.R.drawable.ic_empty_user_img
+
     Glide.with(LocalContext.current)
         .asBitmap()
         .load(imgUrl)
@@ -106,7 +109,7 @@ fun ProfileImg(imgUrl: String, modifier: Modifier = Modifier){
             modifier = imageModifier
         )
     } ?: Image(
-        painter = painterResource(id = R.drawable.ic_empty_user_img),
+        painter = painterResource(id = emptyImg ),
         contentScale = ContentScale.Fit,
         contentDescription = null,
         modifier = imageModifier
