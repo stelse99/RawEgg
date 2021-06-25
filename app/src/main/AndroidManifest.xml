@@ -3,6 +3,8 @@
     package="com.example.rawegg"
     xmlns:dist="http://schemas.android.com/apk/distribution">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <dist:module dist:instant="true" />
     <application
         android:allowBackup="true"

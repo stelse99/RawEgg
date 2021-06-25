@@ -107,8 +107,8 @@ private fun RawEggBottomNavigation(
                         imageVector = screen.icon,
                         contentDescription=screen.route,
                         modifier = Modifier
-                            .height(40.dp)
-                            .width(40.dp)
+                            .height(30.dp)
+                            .width(30.dp)
                     )
                 },
                 label = { Text(stringResource(id = screen.resourceId)) },

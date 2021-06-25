@@ -29,7 +29,7 @@ import com.bumptech.glide.request.transition.Transition
 import com.example.rawegg.utils.RandomUser
 
 @Composable
-fun RandomUserListView(randomUsers: List<RandomUser>){
+fun RandomUserListView(randomUsers: List<RandomUser>) {
     // 메모리 관리가 들어간 LazyColumn
     LazyColumn{
 //        items(randomUsers){ aRandomUser ->
@@ -40,7 +40,7 @@ fun RandomUserListView(randomUsers: List<RandomUser>){
 }
 
 @Composable
-fun RandomUserView(randomUser: RandomUser){
+fun RandomUserView(randomUser: RandomUser) {
     val typography = MaterialTheme.typography
     Card(
         modifier = Modifier
@@ -49,9 +49,10 @@ fun RandomUserView(randomUser: RandomUser){
         elevation = 10.dp,
         shape = RoundedCornerShape(12.dp)
     ) {
-        Row(modifier = Modifier.padding(10.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        Row(
+           modifier = Modifier.padding(10.dp),
+           verticalAlignment = Alignment.CenterVertically,
+           horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
 //            Box(modifier =
 //                Modifier
@@ -73,34 +74,33 @@ fun RandomUserView(randomUser: RandomUser){
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun ProfileImg(imgUrl: String, modifier: Modifier = Modifier){
-    // 이미지 비트맵
     val bitmap : MutableState<Bitmap?> = mutableStateOf(null)
 
-    // 이미지 모디파이어
+    // 2021.06.25 suchang How find R.drawable at the sub packages!!!
+    val emptyImg = com.example.rawegg.R.drawable.ic_empty_user_img
+
     val imageModifier = modifier
         .size(50.dp, 50.dp)
 //        .clip(RoundedCornerShape(10.dp))
         .clip(CircleShape)
 
-    // 2021.06.25 suchang How find R.drawable at the sub packages!!!
-    val emptyImg = com.example.rawegg.R.drawable.ic_empty_user_img
-
     Glide.with(LocalContext.current)
         .asBitmap()
         .load(imgUrl)
         .into(object : CustomTarget<Bitmap>(){
-            override fun onResourceReady(
+            override fun onResourceReady (
                 resource: Bitmap,
                 transition: Transition<in Bitmap>?
             ) {
                 bitmap.value = resource
             }
-            override fun onLoadCleared(
+            override fun onLoadCleared (
                 placeholder: Drawable?
             ) { }
         })
 
-    // 비트 맵이 있다면
+    // 2021.06.25 suchang If it's not working
+    // you should check INTERNET Permition.
     bitmap.value?.asImageBitmap()?.let { fetchedBitmap ->
         Image(
             bitmap = fetchedBitmap,
@@ -109,7 +109,7 @@ fun ProfileImg(imgUrl: String, modifier: Modifier = Modifier){
             modifier = imageModifier
         )
     } ?: Image(
-        painter = painterResource(id = emptyImg ),
+        painter = painterResource(id = emptyImg),
         contentScale = ContentScale.Fit,
         contentDescription = null,
         modifier = imageModifier
