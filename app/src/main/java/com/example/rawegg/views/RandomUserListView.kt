@@ -1,9 +1,13 @@
 package com.example.rawegg.views
 
 import android.annotation.SuppressLint
+import android.content.ContentValues.TAG
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -18,6 +22,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -29,28 +34,38 @@ import com.bumptech.glide.request.transition.Transition
 import com.example.rawegg.utils.RandomUser
 
 @Composable
-fun RandomUserListView(randomUsers: List<RandomUser>) {
+fun RandomUserListView (
+    randomUsers: List<RandomUser>
+) {
     // 메모리 관리가 들어간 LazyColumn
-    LazyColumn{
+    LazyColumn {
 //        items(randomUsers){ aRandomUser ->
 //            RandomUserView(aRandomUser)
 //        }
-        items(randomUsers){ RandomUserView(it) }
+        items(randomUsers){
+            RandomUserView(it)
+        }
     }
 }
 
 @Composable
-fun RandomUserView(randomUser: RandomUser) {
+fun RandomUserView (
+    randomUser: RandomUser
+) {
     val typography = MaterialTheme.typography
-    Card(
+
+    Card (
         modifier = Modifier
             .fillMaxWidth()
+            .background(Color.Black)
             .padding(10.dp),
-        elevation = 10.dp,
+        elevation = 30.dp,
         shape = RoundedCornerShape(12.dp)
     ) {
-        Row(
-           modifier = Modifier.padding(10.dp),
+        Row (
+           modifier = Modifier
+               .background(Color.Black)
+               .padding(10.dp),
            verticalAlignment = Alignment.CenterVertically,
            horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
@@ -60,56 +75,66 @@ fun RandomUserView(randomUser: RandomUser) {
 //                    .clip(CircleShape)
 //                    .background(Color.Red)
 //            )
-            ProfileImg(imgUrl = randomUser.profileImage)
-            Column{
-                Text(text = randomUser.name,
-                    style = typography.subtitle1)
-                Text(text = randomUser.description,
-                    style = typography.body1)
+            ProfileImg (imgUrl = randomUser.profileImage)
+            Column {
+                Text (
+                    text = randomUser.name,
+                    style = typography.body1
+                )
+                Text (
+                    text = randomUser.description,
+                    style = typography.subtitle1
+                )
             }
         }
     }
 }
 
+
 @SuppressLint("UnrememberedMutableState")
 @Composable
-fun ProfileImg(imgUrl: String, modifier: Modifier = Modifier){
+fun ProfileImg (
+    imgUrl: String,
+    modifier: Modifier = Modifier
+) {
     val bitmap : MutableState<Bitmap?> = mutableStateOf(null)
-
-    // 2021.06.25 suchang How find R.drawable at the sub packages!!!
-    val emptyImg = com.example.rawegg.R.drawable.ic_empty_user_img
 
     val imageModifier = modifier
         .size(50.dp, 50.dp)
 //        .clip(RoundedCornerShape(10.dp))
         .clip(CircleShape)
 
+    //Toast.makeText(LocalContext.current, "안녕", Toast.LENGTH_SHORT).show()
+    //Log.d(TAG,"ProfileImg::Glide")
+
     Glide.with(LocalContext.current)
         .asBitmap()
         .load(imgUrl)
-        .into(object : CustomTarget<Bitmap>(){
-            override fun onResourceReady (
-                resource: Bitmap,
-                transition: Transition<in Bitmap>?
-            ) {
-                bitmap.value = resource
-            }
-            override fun onLoadCleared (
-                placeholder: Drawable?
-            ) { }
-        })
+        .into(
+            object : CustomTarget<Bitmap>() {
+                override fun onResourceReady (
+                    resource: Bitmap,
+                    transition: Transition<in Bitmap>?
+                ) {
+                    bitmap.value = resource
+                }
+                override fun onLoadCleared (
+                    placeholder: Drawable?
+                ) { }
+           }
+        )
 
-    // 2021.06.25 suchang If it's not working
-    // you should check INTERNET Permition.
+    // 2021.06.25 suchang If it's not working you should check INTERNET Permition.
+    // 2021.06.25 suchang How find R.drawable at the sub packages!!!
     bitmap.value?.asImageBitmap()?.let { fetchedBitmap ->
-        Image(
+        Image (
             bitmap = fetchedBitmap,
             contentScale = ContentScale.Fit,
             contentDescription = null,
             modifier = imageModifier
         )
-    } ?: Image(
-        painter = painterResource(id = emptyImg),
+    } ?: Image (
+        painter = painterResource(id = com.example.rawegg.R.drawable.ic_empty_user_img),
         contentScale = ContentScale.Fit,
         contentDescription = null,
         modifier = imageModifier

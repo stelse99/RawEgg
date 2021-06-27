@@ -12,8 +12,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.rawegg.ui.theme.RawEggTheme
 import com.example.rawegg.views.BottomNavigationScreen
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    companion object {
+        const val TAG: String = "로그"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -26,9 +32,11 @@ class MainActivity : ComponentActivity() {
 
 
 @Composable
-fun ContentView(){
+fun ContentView() {
     // A surface container using the 'background' color from the theme
-    Surface(color = MaterialTheme.colors.background) {
+    Surface (
+        color = MaterialTheme.colors.background
+    ) {
         BottomNavigationScreen()
     }
 }

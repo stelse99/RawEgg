@@ -39,7 +39,9 @@ sealed class BottomNavigationMenu (
     object ScaryBag : BottomNavigationMenu("ScaryBag", R.string.scary_bag_screen_route, Icons.Filled.Cake)
 }
 
-sealed class ScaryAnimation(val animId: Int){
+sealed class ScaryAnimation (
+    val animId: Int
+) {
     //object Frankendroid: ScaryAnimation(R.raw.frankensteindroid)
     object Pumpkin: ScaryAnimation(R.raw.jackolantern)
     object Ghost: ScaryAnimation(R.raw.ghost)
@@ -49,29 +51,30 @@ sealed class ScaryAnimation(val animId: Int){
 
 @Composable
 fun BottomNavigationScreen() {
-
     val navController = rememberNavController()
 
-    val bottomNavigationItems = listOf(
+    val bottomNavigationItems = listOf (
         BottomNavigationMenu.Frankendroid,
         BottomNavigationMenu.Pumpkin,
         BottomNavigationMenu.Ghost,
         BottomNavigationMenu.ScaryBag
     )
-    Scaffold(
+
+    Scaffold (
         bottomBar = {
             RawEggBottomNavigation(navController, bottomNavigationItems)
         },
     ) {
-        RawEggBottomNavigationConfigurations(navController)
+        RawEggBottomNavigationActions(navController)
     }
 }
 
 @Composable
-private fun RawEggBottomNavigationConfigurations(
+private fun RawEggBottomNavigationActions (
     navController: NavHostController
 ) {
-    NavHost(navController,
+    NavHost(
+        navController,
         startDestination = BottomNavigationMenu.Frankendroid.route
     ) {
         composable(BottomNavigationMenu.Frankendroid.route) {
@@ -79,7 +82,8 @@ private fun RawEggBottomNavigationConfigurations(
             RandomUserListView(randomUsers = DummyDataProvider.userList)
         }
         composable(BottomNavigationMenu.Pumpkin.route) {
-            ScaryScreen(ScaryAnimation.Pumpkin)
+            //ScaryScreen(ScaryAnimation.Pumpkin)
+            PokemonListScreen(navController = navController)
         }
         composable(BottomNavigationMenu.Ghost.route) {
             ScaryScreen(ScaryAnimation.Ghost)
@@ -91,7 +95,7 @@ private fun RawEggBottomNavigationConfigurations(
 }
 
 @Composable
-private fun RawEggBottomNavigation(
+private fun RawEggBottomNavigation (
     navController: NavHostController,
     items: List<BottomNavigationMenu>
 ) {
@@ -99,13 +103,13 @@ private fun RawEggBottomNavigation(
     BottomNavigation {
         val currentRoute = CurrentRoute(navController)
         items.forEach { screen ->
-            BottomNavigationItem(
+            BottomNavigationItem (
                 selectedContentColor = Color.White,
                 unselectedContentColor = Color.DarkGray,
                 icon = {
-                    Icon(
+                    Icon (
                         imageVector = screen.icon,
-                        contentDescription=screen.route,
+                        contentDescription= screen.route,
                         modifier = Modifier
                             .height(30.dp)
                             .width(30.dp)
@@ -119,26 +123,31 @@ private fun RawEggBottomNavigation(
                     if (currentRoute != screen.route) {
                         navController.navigate(screen.route)
                     }
-                })
+                }
+            )
         }
     }
 }
 
 @Composable
-private fun CurrentRoute(navController: NavHostController): String? {
+private fun CurrentRoute (
+    navController: NavHostController
+): String? {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
+
     return navBackStackEntry?.destination?.route
 }
 
 @Composable
-fun ScaryScreen(
+fun ScaryScreen (
     scaryAnimation: ScaryAnimation
 ) {
     // 2021.06.24 suchang Renamed ContextAmbient to LocalContext
     val context = LocalContext.current
     val customView = remember { LottieAnimationView(context) }
     // Adds view to Compose
-    AndroidView({ customView },
+    AndroidView(
+        { customView },
         modifier = Modifier.background(Color.Black)
     ) { view ->
         // View's been inflated - add logic here if necessary

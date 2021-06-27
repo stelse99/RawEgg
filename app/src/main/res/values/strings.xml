@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">RawEgg</string>
-    <string name="frankendroid_route">Frankendroid</string>
-    <string name="pumpkin_screen_route">Pumpkin</string>
-    <string name="ghost_screen_route">Ghost</string>
-    <string name="scary_bag_screen_route">ScaryBag</string>
+    <string name="frankendroid_route">홈</string>
+    <string name="pumpkin_screen_route">내소비</string>
+    <string name="ghost_screen_route">혜택</string>
+    <string name="scary_bag_screen_route">주식</string>
 </resources>
