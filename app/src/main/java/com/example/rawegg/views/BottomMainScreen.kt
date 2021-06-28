@@ -89,7 +89,8 @@ private fun RawEggBottomNavigationActions (
             ScaryScreen(ScaryAnimation.Ghost)
         }
         composable(BottomNavigationMenu.ScaryBag.route) {
-            ScaryScreen(ScaryAnimation.ScaryBag)
+            //ScaryScreen(ScaryAnimation.ScaryBag)
+            TestScreen()
         }
     }
 }
