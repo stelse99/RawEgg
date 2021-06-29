@@ -1,57 +1,180 @@
 package com.example.rawegg.views
 
+import android.widget.Toast
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.rawegg.ContentView
+import com.example.rawegg.ui.theme.RawEggTheme
 
 @Composable
-fun TestScreen() {
-    Surface(
-        color = MaterialTheme.colors.background,
-        modifier = Modifier.fillMaxSize()
+fun GradientButton(
+    text: String,
+    gradient : Brush,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = { },
+) {
+    Button(
+        modifier = modifier,
+        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
+        contentPadding = PaddingValues(),
+        onClick = { onClick() },
     ) {
-
-        @Composable
-        fun GradientButtonExample() {
-
-            val horizontalGradientBrush = Brush.horizontalGradient(
-                colors = listOf(
-                    Color(0xffF57F17),
-                    Color(0xffFFEE58),
-                    Color(0xffFFF9C4)
-                )
-            )
-
-            val verticalGradientBrush = Brush.verticalGradient(
-                colors = listOf(
-                    Color(0xff4E342E),
-                    Color(0xff8D6E63),
-                    Color(0xffD7CCC8)
-                )
-            )
-
-            Button(onClick = {}) {
-                Text(
-                    text = "Horizontal Gradient",
-                    modifier = Modifier
-                        .background(brush = horizontalGradientBrush)
-                )
-            }
-
-            Button(onClick = {}) {
-                Text(
-                    text = "Vertical Gradient",
-                    modifier = Modifier
-                        .background(brush = verticalGradientBrush)
-                )
-            }
+        Box(
+            modifier = Modifier
+                .background(gradient)
+                .then(modifier),
+            contentAlignment = Alignment.Center,
+        ) {
+            Text(text = text)
         }
     }
 }
+
+
+@Composable
+private fun Content() {
+
+    val gradient =
+        Brush.horizontalGradient(listOf(Color(0xFF28D8A3), Color(0xFF00BEB2)))
+
+    Column {
+        GradientButton(
+            text = "Gradient Button - Max Width",
+            gradient = gradient,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+        )
+        GradientButton(
+            text = "Gradient Button - Wrap Width",
+            gradient = gradient,
+            modifier = Modifier
+                .wrapContentWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+        Text(
+            text = "Click Me",
+            style = TextStyle(color = Color.White),
+            modifier = Modifier
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .clickable(onClick = {})
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            Color.Blue,
+                            Color.Green
+                        )
+                    ),
+                    shape = RoundedCornerShape(4.dp)
+                )
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+        Button(
+            modifier = Modifier
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            contentPadding = PaddingValues(0.dp),
+            onClick = {}
+        ) {
+            Text(
+                text = "Horizontal Gradient",
+                modifier = Modifier
+                    //.preferredHeight(ButtonDefaults.MinHeight)
+                    .align(Alignment.CenterVertically)
+                    .background(brush = gradient)
+                    .padding(8.dp)
+            )
+        }
+
+
+
+
+    }
+}
+
+
+@Composable
+fun SimpleButtonComponent() {
+    val context = LocalContext.current
+    Button(
+        onClick = {
+            Toast.makeText(context, "Thanks for clicking! I am Button", Toast.LENGTH_SHORT).show()
+        },
+        modifier = Modifier.padding(16.dp).fillMaxWidth()
+    ) {
+        Text("Click Me")
+    }
+}
+
+@ExperimentalFoundationApi
+@Composable
+fun SimpleTextComponent() {
+    val context = LocalContext.current
+    Text(
+        text = "Click Me",
+        textAlign = TextAlign.Center,
+        color = Color.Black,
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxWidth()
+            .combinedClickable( onClick = {
+                Toast.makeText(context, "Thanks for clicking! I am Text", Toast.LENGTH_SHORT).show()
+            }, onLongClick = {
+               Toast.makeText(context, "Thanks for LONG click! I am Text", Toast.LENGTH_SHORT).show()
+            }, onDoubleClick = {
+            Toast.makeText(context, "Thanks for DOUBLE click! I am Text", Toast.LENGTH_SHORT).show()
+        })
+    )
+}
+
+@Composable
+fun SimpleCardComponent() {
+    val context = LocalContext.current
+    Card(
+        shape = RoundedCornerShape(4.dp),
+        backgroundColor = Color(0xFFFFA867.toInt()),
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxWidth()
+            .clickable(onClick = {
+                Toast.makeText(context, "Thanks for clicking! I am Card.", Toast.LENGTH_SHORT).show()
+            })
+    ) {
+        Text(
+            text = "Click Me",
+            textAlign = TextAlign.Center,
+            style = TextStyle(
+                fontSize = 16.sp
+            ),
+            modifier = Modifier.padding(16.dp)
+        )
+    }
+}
+
+@ExperimentalFoundationApi
+@Composable
+fun TestScreen() {
+    Content()
+    SimpleButtonComponent()
+    SimpleTextComponent()
+    SimpleCardComponent()
+
+}
+

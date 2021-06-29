@@ -32,6 +32,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.example.rawegg.utils.RandomUser
+import com.example.rawegg.R
 
 @Composable
 fun RandomUserListView (
@@ -123,9 +124,9 @@ fun ProfileImg (
                 ) { }
            }
         )
-
     // 2021.06.25 suchang If it's not working you should check INTERNET Permition.
     // 2021.06.25 suchang How find R.drawable at the sub packages!!!
+    //            import import com.example.rawegg.R
     bitmap.value?.asImageBitmap()?.let { fetchedBitmap ->
         Image (
             bitmap = fetchedBitmap,
@@ -134,7 +135,7 @@ fun ProfileImg (
             modifier = imageModifier
         )
     } ?: Image (
-        painter = painterResource(id = com.example.rawegg.R.drawable.ic_empty_user_img),
+        painter = painterResource(id = R.drawable.ic_empty_user_img),
         contentScale = ContentScale.Fit,
         contentDescription = null,
         modifier = imageModifier

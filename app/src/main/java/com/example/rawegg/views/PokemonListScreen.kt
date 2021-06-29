@@ -15,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
@@ -29,12 +30,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.request.ImageRequest
 import com.example.rawegg.MainActivity.Companion.TAG
 import com.example.rawegg.R
 import com.example.rawegg.models.PokedexListEntry
 import com.example.rawegg.ui.theme.RobotoCondensed
 import com.example.rawegg.viewModels.PokemonListViewModel
 import com.google.accompanist.coil.rememberCoilPainter
+import com.google.accompanist.imageloading.ImageLoadState
+import com.google.accompanist.imageloading.isFinalState
+import kotlinx.coroutines.flow.filter
 
 @Composable
 fun PokemonListScreen(
@@ -195,7 +200,7 @@ fun PokedexEntry(
     entry: PokedexListEntry,
     navController: NavController,
     modifier: Modifier = Modifier,
-    //viewModel: PokemonListViewModel = hiltViewModel()
+    viewModel: PokemonListViewModel = hiltViewModel()
 ) {
     val defaultDominantColor = MaterialTheme.colors.surface
     var dominantColor by remember { mutableStateOf(defaultDominantColor) }
@@ -214,27 +219,57 @@ fun PokedexEntry(
                     )
                 )
             )
-            .clickable {
-                navController.navigate(
+            .clickable (
+                /*navController.navigate(
                     "pokemon_detail_screen/${dominantColor.toArgb()}/${entry.pokemonName}"
-                )
-            }
+                )*/
+                onClick = {Toast.makeText( LocalContext.current, "qqqq", Toast.LENGTH_SHORT).show()}
+                /*PokemonDetailScreen(
+                    dominantColor = dominantColor,
+                    pokemonName = entry.pokemonName,
+                    navController = navController
+                )*/
+
+            )
     ) {
         Column {
+            val imageRequest = ImageRequest
+                .Builder(LocalContext.current)
+                .data(entry.imageUrl)
+                .target(
+                    onStart = { placeholder ->
+                        // Handle the placeholder drawable.
+                        CircularProgressIndicator(
+                            color = MaterialTheme.colors.primary,
+                            modifier = Modifier.scale(0.5f)
+                        )
+                    },
+                    onSuccess = { result ->
+                        // Handle the successful result.
+                        viewModel.calcDominantColor(result) { color ->
+                            dominantColor = color
+                        }
+                    },
+                    onError = { error ->
+                        // Handle the error drawable.
+                        R.drawable.photo_architecture
+                    }
+                )
+               //.placeholder(R.drawable.photo_architecture)
+               .build()
 
             val painter = rememberCoilPainter(
-                request = entry.imageUrl,
-                previewPlaceholder = R.drawable.photo_architecture,
+                request = imageRequest,
+                fadeIn = true
             )
 
-            Image(
-                painter = painter,
-                contentDescription = entry.pokemonName,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(120.dp)
-                    .align(Alignment.CenterHorizontally)
-            )
+            Box {
+                Image(
+                    painter = painter,
+                    contentDescription = entry.pokemonName,
+                    contentScale = ContentScale.FillBounds
+                )
+            }
             Text(
                 text = entry.pokemonName,
                 fontFamily = RobotoCondensed,
