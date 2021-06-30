@@ -21,11 +21,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.*
 import com.airbnb.lottie.LottieAnimationView
 import com.airbnb.lottie.LottieDrawable
 import com.example.rawegg.R
 import com.example.rawegg.utils.DummyDataProvider
+import java.util.*
 
 // 2021.06.24 suchang Renamed VectorAsset to ImageVector
 sealed class BottomNavigationMenu (
@@ -65,18 +67,19 @@ fun BottomNavigationScreen() {
             RawEggBottomNavigation(navController, bottomNavigationItems)
         },
     ) {
-        RawEggBottomNavigationActions(navController)
+        RawEggNavigationActions(navController)
     }
 }
 
 @Composable
-private fun RawEggBottomNavigationActions (
+private fun RawEggNavigationActions (
     navController: NavHostController
 ) {
     NavHost(
         navController,
         startDestination = BottomNavigationMenu.Frankendroid.route
     ) {
+        // BottomNavigations Start
         composable(BottomNavigationMenu.Frankendroid.route) {
             //ScaryScreen(ScaryAnimation.Frankendroid)
             RandomUserListView(randomUsers = DummyDataProvider.userList)
@@ -92,6 +95,34 @@ private fun RawEggBottomNavigationActions (
             //ScaryScreen(ScaryAnimation.ScaryBag)
             TestScreen()
         }
+        // BottomNavigations End
+
+        // Sub Navigations Start
+        composable(
+            "pokemon_detail_screen/{dominantColor}/{pokemonName}",
+            arguments = listOf(
+                navArgument("dominantColor") {
+                    type = NavType.IntType
+                },
+                navArgument("pokemonName") {
+                    type = NavType.StringType
+                }
+            )
+        ) {
+            val dominantColor = remember {
+                val color = it.arguments?.getInt("dominantColor")
+                color?.let { Color(it) } ?: Color.White
+            }
+            val pokemonName = remember {
+                it.arguments?.getString("pokemonName")
+            }
+            PokemonDetailScreen(
+                dominantColor = dominantColor,
+                pokemonName = pokemonName?.lowercase(Locale.ROOT) ?: "",
+                navController = navController
+            )
+        }
+        // Sub Navigations End
     }
 }
 

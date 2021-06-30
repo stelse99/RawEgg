@@ -1,7 +1,6 @@
 package com.example.rawegg.views
 
 import android.widget.Toast
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
@@ -103,9 +102,9 @@ private fun Content() {
             )
         }
 
-
-
-
+        SimpleButtonComponent()
+        //SimpleTextComponent()
+        SimpleCardComponent()
     }
 }
 
@@ -117,12 +116,15 @@ fun SimpleButtonComponent() {
         onClick = {
             Toast.makeText(context, "Thanks for clicking! I am Button", Toast.LENGTH_SHORT).show()
         },
-        modifier = Modifier.padding(16.dp).fillMaxWidth()
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxWidth()
     ) {
         Text("Click Me")
     }
 }
 
+/*
 @ExperimentalFoundationApi
 @Composable
 fun SimpleTextComponent() {
@@ -143,6 +145,7 @@ fun SimpleTextComponent() {
         })
     )
 }
+*/
 
 @Composable
 fun SimpleCardComponent() {
@@ -168,13 +171,16 @@ fun SimpleCardComponent() {
     }
 }
 
-@ExperimentalFoundationApi
+
 @Composable
 fun TestScreen() {
     Content()
-    SimpleButtonComponent()
-    SimpleTextComponent()
-    SimpleCardComponent()
-
 }
 
+@Composable
+@Preview
+fun DefaultPreview() {
+    RawEggTheme {
+        TestScreen()
+    }
+}

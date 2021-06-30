@@ -204,6 +204,8 @@ fun PokedexEntry(
 ) {
     val defaultDominantColor = MaterialTheme.colors.surface
     var dominantColor by remember { mutableStateOf(defaultDominantColor) }
+    var isClickPokemonDetail by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
     Box(
         contentAlignment = Alignment.Center,
@@ -219,18 +221,11 @@ fun PokedexEntry(
                     )
                 )
             )
-            .clickable (
-                /*navController.navigate(
+            .clickable {
+                navController.navigate(
                     "pokemon_detail_screen/${dominantColor.toArgb()}/${entry.pokemonName}"
-                )*/
-                onClick = {Toast.makeText( LocalContext.current, "qqqq", Toast.LENGTH_SHORT).show()}
-                /*PokemonDetailScreen(
-                    dominantColor = dominantColor,
-                    pokemonName = entry.pokemonName,
-                    navController = navController
-                )*/
-
-            )
+                )
+            }
     ) {
         Column {
             val imageRequest = ImageRequest
@@ -267,7 +262,7 @@ fun PokedexEntry(
                 Image(
                     painter = painter,
                     contentDescription = entry.pokemonName,
-                    contentScale = ContentScale.FillBounds
+                    contentScale = ContentScale.FillBounds,
                 )
             }
             Text(

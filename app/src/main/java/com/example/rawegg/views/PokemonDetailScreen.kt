@@ -16,10 +16,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -28,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.request.ImageRequest
 import com.example.rawegg.models.remote.responses.Pokemon
 import com.example.rawegg.models.remote.responses.Type
 import com.example.rawegg.utils.Resource
@@ -36,14 +39,17 @@ import com.example.rawegg.viewModels.PokemonDetailViewModel
 import java.util.*
 import kotlin.math.round
 import com.example.rawegg.R
+import com.example.rawegg.utils.parseStatToAbbr
+import com.example.rawegg.utils.parseStatToColor
+import com.google.accompanist.coil.rememberCoilPainter
 
 @Composable
 fun PokemonDetailScreen(
     dominantColor: Color,
     pokemonName: String,
     navController: NavController,
-    topPadding: Dp = 20.dp,
-    pokemonImageSize: Dp = 200.dp,
+    topPadding: Dp = 10.dp,
+    pokemonImageSize: Dp = 150.dp,
     viewModel: PokemonDetailViewModel = hiltViewModel()
 ) {
     val pokemonInfo = produceState<Resource<Pokemon>>(
@@ -95,18 +101,25 @@ fun PokemonDetailScreen(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            /*if(pokemonInfo is Resource.Success) {
+            if(pokemonInfo is Resource.Success) {
                 pokemonInfo.data?.sprites?.let {
-                    CoilImage(
-                        data = it.frontDefault,
+                    val imageRequest = ImageRequest
+                        .Builder(LocalContext.current)
+                        .data(it.frontDefault)
+                        .build()
+                    val painter = rememberCoilPainter(
+                        request = imageRequest,
+                        fadeIn = true
+                    )
+                    Image(
+                        painter = painter,
                         contentDescription = pokemonInfo.data.name,
-                        fadeIn = true,
                         modifier = Modifier
                             .size(pokemonImageSize)
                             .offset(y = topPadding)
                     )
                 }
-            }*/
+            }
         }
     }
 }
@@ -183,11 +196,11 @@ fun PokemonDetailSection(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .fillMaxSize()
-            .offset(y = 100.dp)
+            .offset(y = 50.dp)
             .verticalScroll(scrollState)
     ) {
         Text(
-            text = "#${pokemonInfo.id} ${pokemonInfo.name.capitalize(Locale.ROOT)}",
+            text = "#${pokemonInfo.id} ${pokemonInfo.name.uppercase(Locale.ROOT)}",
             fontWeight = FontWeight.Bold,
             fontSize = 30.sp,
             textAlign = TextAlign.Center,
@@ -220,7 +233,7 @@ fun PokemonTypeSection(types: List<Type>) {
                     .height(35.dp)
             ) {
                 Text(
-                    text = type.type.name.capitalize(Locale.ROOT),
+                    text = type.type.name.uppercase(Locale.ROOT),
                     color = Color.White,
                     fontSize = 18.sp
                 )
@@ -349,9 +362,9 @@ fun PokemonBaseStats(
     pokemonInfo: Pokemon,
     animDelayPerItem: Int = 100
 ) {
-    /*val maxBaseStat = remember {
+    val maxBaseStat = remember {
         pokemonInfo.stats.maxOf { it.baseStat }
-    }*/
+    }
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -364,13 +377,13 @@ fun PokemonBaseStats(
 
         for(i in pokemonInfo.stats.indices) {
             val stat = pokemonInfo.stats[i]
-            /*PokemonStat(
+            PokemonStat(
                 statName = parseStatToAbbr(stat),
-                //statValue = stat.baseStat,
-                //statMaxValue = maxBaseStat,
+                statValue = stat.baseStat,
+                statMaxValue = maxBaseStat,
                 statColor = parseStatToColor(stat),
                 animDelay = i * animDelayPerItem
-            )*/
+            )
             Spacer(modifier = Modifier.height(8.dp))
         }
     }
