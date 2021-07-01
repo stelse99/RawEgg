@@ -37,6 +37,7 @@ import com.example.rawegg.models.PokedexListEntry
 import com.example.rawegg.ui.theme.RobotoCondensed
 import com.example.rawegg.viewModels.PokemonListViewModel
 import com.google.accompanist.coil.rememberCoilPainter
+import timber.log.Timber
 
 
 @Composable
@@ -241,8 +242,8 @@ fun PokedexEntry(
         request = imageRequest,
         fadeIn = true
     )*/
-
-    Log.d(TAG,"dominantColor::Coil...start...")
+    Timber.tag(TAG).d("dominantColor::Coil...start...")
+    //Timber.plant(Timber.DebugTree())
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
@@ -258,7 +259,7 @@ fun PokedexEntry(
                 )
             )
             .clickable {
-                Log.d(TAG,"dominantColor::Coil...Clickable...")
+                Timber.tag(TAG).d("dominantColor::Coil...Clickable...")
                 navController.navigate(
                     "pokemon_detail_screen/${dominantColor.toArgb()}/${entry.pokemonName}"
                 )
@@ -266,7 +267,7 @@ fun PokedexEntry(
     ) {
         Column {
             Box {
-                Log.d(TAG,"dominantColor::Coil...before box")
+                Timber.i("로그::onStart Called")
                 Image(
                     painter = rememberCoilPainter(
                         request = ImageRequest
