@@ -37,9 +37,7 @@ import com.example.rawegg.models.PokedexListEntry
 import com.example.rawegg.ui.theme.RobotoCondensed
 import com.example.rawegg.viewModels.PokemonListViewModel
 import com.google.accompanist.coil.rememberCoilPainter
-import com.google.accompanist.imageloading.ImageLoadState
-import com.google.accompanist.imageloading.isFinalState
-import kotlinx.coroutines.flow.filter
+
 
 @Composable
 fun PokemonListScreen(
@@ -204,9 +202,47 @@ fun PokedexEntry(
 ) {
     val defaultDominantColor = MaterialTheme.colors.surface
     var dominantColor by remember { mutableStateOf(defaultDominantColor) }
-    var isClickPokemonDetail by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
+/*    val imageRequest = ImageRequest
+        .Builder(context)
+        .data(entry.imageUrl)
+        .target {
+            viewModel.calcDominantColor(it) { color ->
+                //Toast.makeText(context, "dominantColor....", Toast.LENGTH_SHORT).show()
+                Log.d(TAG,"dominantColor::Coil...")
+
+                dominantColor = color
+            }
+        }*/
+        /*.target(
+            onStart = {
+                // Handle the placeholder drawable.
+                CircularProgressIndicator(
+                    color = MaterialTheme.colors.primary,
+                    modifier = Modifier.scale(0.5f)
+                )
+            },
+            onSuccess = { result ->
+                // Handle the successful result.
+                viewModel.calcDominantColor(result) { color ->
+                    dominantColor = color
+                }
+            },
+            onError = {
+                // Handle the error drawable.
+                R.drawable.photo_architecture
+            }
+        )*/
+        //.placeholder(R.drawable.photo_architecture)
+  /*      .build()*/
+
+/*    val painter = rememberCoilPainter(
+        request = imageRequest,
+        fadeIn = true
+    )*/
+
+    Log.d(TAG,"dominantColor::Coil...start...")
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
@@ -222,56 +258,45 @@ fun PokedexEntry(
                 )
             )
             .clickable {
+                Log.d(TAG,"dominantColor::Coil...Clickable...")
                 navController.navigate(
                     "pokemon_detail_screen/${dominantColor.toArgb()}/${entry.pokemonName}"
                 )
             }
     ) {
         Column {
-            val imageRequest = ImageRequest
-                .Builder(LocalContext.current)
-                .data(entry.imageUrl)
-                .target(
-                    onStart = { placeholder ->
-                        // Handle the placeholder drawable.
-                        CircularProgressIndicator(
-                            color = MaterialTheme.colors.primary,
-                            modifier = Modifier.scale(0.5f)
-                        )
-                    },
-                    onSuccess = { result ->
-                        // Handle the successful result.
-                        viewModel.calcDominantColor(result) { color ->
-                            dominantColor = color
-                        }
-                    },
-                    onError = { error ->
-                        // Handle the error drawable.
-                        R.drawable.photo_architecture
-                    }
-                )
-               //.placeholder(R.drawable.photo_architecture)
-               .build()
-
-            val painter = rememberCoilPainter(
-                request = imageRequest,
-                fadeIn = true
-            )
-
             Box {
+                Log.d(TAG,"dominantColor::Coil...before box")
                 Image(
-                    painter = painter,
+                    painter = rememberCoilPainter(
+                        request = ImageRequest
+                            .Builder(context)
+                            .data(entry.imageUrl)
+                            .target {
+                                Log.d(TAG,"dominantColor::Coil...target...start")
+                                viewModel.calcDominantColor(it) { color ->
+                                    //Toast.makeText(context, "dominantColor....", Toast.LENGTH_SHORT).show()
+                                    Log.d(TAG,"dominantColor::Coil...")
+
+                                    dominantColor = color
+                                }
+                            }
+                            .build(),
+                        fadeIn = true
+                    ),
                     contentDescription = entry.pokemonName,
-                    contentScale = ContentScale.FillBounds,
+                    contentScale = ContentScale.FillBounds
                 )
+                Log.d(TAG,"dominantColor::Coil...after image")
+                Text(
+                    text = entry.pokemonName,
+                    fontFamily = RobotoCondensed,
+                    fontSize = 20.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Log.d(TAG,"dominantColor::Coil...after text")
             }
-            Text(
-                text = entry.pokemonName,
-                fontFamily = RobotoCondensed,
-                fontSize = 20.sp,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-            )
         }
     }
 }
@@ -292,8 +317,3 @@ fun RetrySection(
         }
     }
 }
-
-
-
-
-

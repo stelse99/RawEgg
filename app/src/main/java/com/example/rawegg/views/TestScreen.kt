@@ -120,7 +120,7 @@ fun SimpleButtonComponent() {
             .padding(16.dp)
             .fillMaxWidth()
     ) {
-        Text("Click Me")
+        Text("Click Me Now")
     }
 }
 
