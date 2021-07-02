@@ -3,8 +3,6 @@ package com.example.rawegg.views
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,7 +16,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
@@ -34,16 +31,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import coil.request.ImageRequest
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
-import com.example.rawegg.MainActivity.Companion.TAG
 import com.example.rawegg.R
 import com.example.rawegg.models.PokedexListEntry
 import com.example.rawegg.ui.theme.RobotoCondensed
 import com.example.rawegg.viewModels.PokemonListViewModel
-import com.google.accompanist.coil.rememberCoilPainter
 import timber.log.Timber
 
 
@@ -199,8 +193,7 @@ fun PokedexRow(
     }
 }
 
-
-
+/*
 @Composable
 fun PokedexEntryTmp(
     entry: PokedexListEntry,
@@ -212,7 +205,7 @@ fun PokedexEntryTmp(
     var dominantColor by remember { mutableStateOf(defaultDominantColor) }
     val context = LocalContext.current
 
-/*    val imageRequest = ImageRequest
+    val imageRequest = ImageRequest
         .Builder(context)
         .data(entry.imageUrl)
         .target {
@@ -222,8 +215,8 @@ fun PokedexEntryTmp(
 
                 dominantColor = color
             }
-        }*/
-        /*.target(
+        }
+        .target(
             onStart = {
                 // Handle the placeholder drawable.
                 CircularProgressIndicator(
@@ -241,16 +234,16 @@ fun PokedexEntryTmp(
                 // Handle the error drawable.
                 R.drawable.photo_architecture
             }
-        )*/
+        )
         //.placeholder(R.drawable.photo_architecture)
-  /*      .build()*/
+        .build()
 
-/*    val painter = rememberCoilPainter(
+    val painter = rememberCoilPainter(
         request = imageRequest,
         fadeIn = true
-    )*/
+    )
+
     Timber.tag(TAG).d("dominantColor::Coil...start...")
-    //Timber.plant(Timber.DebugTree())
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
@@ -281,11 +274,10 @@ fun PokedexEntryTmp(
                             .Builder(context)
                             .data(entry.imageUrl)
                             .target {
-                                Log.d(TAG,"dominantColor::Coil...target...start")
                                 viewModel.calcDominantColor(it) { color ->
+                                    //2021.07.01 suchang 아무리 해봐도 이부분이 처리안된다. 그래서 Glide 로 대체 했다.
                                     //Toast.makeText(context, "dominantColor....", Toast.LENGTH_SHORT).show()
                                     Log.d(TAG,"dominantColor::Coil...")
-
                                     dominantColor = color
                                 }
                             }
@@ -295,7 +287,6 @@ fun PokedexEntryTmp(
                     contentDescription = entry.pokemonName,
                     contentScale = ContentScale.FillBounds
                 )
-                Log.d(TAG,"dominantColor::Coil...after image")
                 Text(
                     text = entry.pokemonName,
                     fontFamily = RobotoCondensed,
@@ -303,11 +294,11 @@ fun PokedexEntryTmp(
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
                 )
-                Log.d(TAG,"dominantColor::Coil...after text")
             }
         }
     }
 }
+*/
 
 
 
@@ -320,7 +311,6 @@ fun PokedexEntry(
 ) {
     val defaultDominantColor = MaterialTheme.colors.surface
     var dominantColor by remember { mutableStateOf(defaultDominantColor) }
-    val context = LocalContext.current
 
     Box(
         contentAlignment = Alignment.Center,
@@ -337,7 +327,6 @@ fun PokedexEntry(
                 )
             )
             .clickable {
-                Timber.tag(TAG).d("dominantColor::Coil...Clickable...")
                 navController.navigate(
                     "pokemon_detail_screen/${dominantColor.toArgb()}/${entry.pokemonName}"
                 )
@@ -345,7 +334,6 @@ fun PokedexEntry(
     ) {
         Column {
             Box {
-                Timber.i("로그::rememberCoilPainter Called")
                 PokedexEntryImage (
                     imgUrl = entry.imageUrl,
                     viewModel =  viewModel
@@ -360,7 +348,6 @@ fun PokedexEntry(
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
                 )
-                Log.d(TAG,"dominantColor::Coil...after text")
             }
         }
     }
@@ -372,7 +359,7 @@ fun PokedexEntryImage (
     imgUrl: String,
     modifier: Modifier = Modifier,
     viewModel: PokemonListViewModel = hiltViewModel(),
-    onFinish: (Color) -> Unit
+    onSetDominantColor: (Color) -> Unit
 ) {
     val bitmap : MutableState<Bitmap?> = mutableStateOf(null)
     val imageModifier = modifier
@@ -393,7 +380,7 @@ fun PokedexEntryImage (
                     transition: Transition<in Bitmap>?
                 ) {
                     viewModel.calcDominantColor(resource) { color ->
-                        onFinish(color)
+                        onSetDominantColor(color)
                     }
                     bitmap.value = resource
                 }
