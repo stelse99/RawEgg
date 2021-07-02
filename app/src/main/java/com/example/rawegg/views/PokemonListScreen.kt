@@ -1,5 +1,8 @@
 package com.example.rawegg.views
 
+import android.annotation.SuppressLint
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -20,6 +23,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -31,6 +35,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.request.ImageRequest
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.example.rawegg.MainActivity.Companion.TAG
 import com.example.rawegg.R
 import com.example.rawegg.models.PokedexListEntry
@@ -195,7 +202,7 @@ fun PokedexRow(
 
 
 @Composable
-fun PokedexEntry(
+fun PokedexEntryTmp(
     entry: PokedexListEntry,
     navController: NavController,
     modifier: Modifier = Modifier,
@@ -267,7 +274,7 @@ fun PokedexEntry(
     ) {
         Column {
             Box {
-                Timber.i("로그::onStart Called")
+                Timber.i("로그::rememberCoilPainter Called")
                 Image(
                     painter = rememberCoilPainter(
                         request = ImageRequest
@@ -301,6 +308,119 @@ fun PokedexEntry(
         }
     }
 }
+
+
+
+@Composable
+fun PokedexEntry(
+    entry: PokedexListEntry,
+    navController: NavController,
+    modifier: Modifier = Modifier,
+    viewModel: PokemonListViewModel = hiltViewModel()
+) {
+    val defaultDominantColor = MaterialTheme.colors.surface
+    var dominantColor by remember { mutableStateOf(defaultDominantColor) }
+    val context = LocalContext.current
+
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier
+            .shadow(5.dp, RoundedCornerShape(10.dp))
+            .clip(RoundedCornerShape(10.dp))
+            .aspectRatio(1f)
+            .background(
+                Brush.verticalGradient(
+                    listOf(
+                        dominantColor,
+                        defaultDominantColor
+                    )
+                )
+            )
+            .clickable {
+                Timber.tag(TAG).d("dominantColor::Coil...Clickable...")
+                navController.navigate(
+                    "pokemon_detail_screen/${dominantColor.toArgb()}/${entry.pokemonName}"
+                )
+            }
+    ) {
+        Column {
+            Box {
+                Timber.i("로그::rememberCoilPainter Called")
+                PokedexEntryImage (
+                    imgUrl = entry.imageUrl,
+                    viewModel =  viewModel
+                ){
+                    dominantColor = it
+                }
+
+                Text(
+                    text = entry.pokemonName,
+                    fontFamily = RobotoCondensed,
+                    fontSize = 20.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Log.d(TAG,"dominantColor::Coil...after text")
+            }
+        }
+    }
+}
+
+@SuppressLint("UnrememberedMutableState")
+@Composable
+fun PokedexEntryImage (
+    imgUrl: String,
+    modifier: Modifier = Modifier,
+    viewModel: PokemonListViewModel = hiltViewModel(),
+    onFinish: (Color) -> Unit
+) {
+    val bitmap : MutableState<Bitmap?> = mutableStateOf(null)
+    val imageModifier = modifier
+        .size(200.dp, 200.dp)
+//        .clip(RoundedCornerShape(10.dp))
+        .clip(CircleShape)
+
+    //Toast.makeText(LocalContext.current, "안녕", Toast.LENGTH_SHORT).show()
+    //Log.d(TAG,"ProfileImg::Glide")
+
+    Glide.with(LocalContext.current)
+        .asBitmap()
+        .load(imgUrl)
+        .into(
+            object : CustomTarget<Bitmap>() {
+                override fun onResourceReady (
+                    resource: Bitmap,
+                    transition: Transition<in Bitmap>?
+                ) {
+                    viewModel.calcDominantColor(resource) { color ->
+                        onFinish(color)
+                    }
+                    bitmap.value = resource
+                }
+                override fun onLoadCleared (
+                    placeholder: Drawable?
+                ) { }
+            }
+        )
+    // 2021.06.25 suchang If it's not working you should check INTERNET Permition.
+    // 2021.06.25 suchang How find R.drawable at the sub packages!!!
+    //            import import com.example.rawegg.R
+    Timber.i("로그::Glide Called asImageBitmap")
+    bitmap.value?.asImageBitmap()?.let { fetchedBitmap ->
+        Image (
+            bitmap = fetchedBitmap,
+            contentScale = ContentScale.Fit,
+            contentDescription = null,
+            modifier = imageModifier
+        )
+    } ?: Image (
+        painter = painterResource(id = R.drawable.ic_empty_user_img),
+        contentScale = ContentScale.Fit,
+        contentDescription = null,
+        modifier = imageModifier
+    )
+}
+
 
 @Composable
 fun RetrySection(

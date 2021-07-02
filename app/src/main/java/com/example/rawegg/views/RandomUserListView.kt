@@ -33,6 +33,7 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.example.rawegg.utils.RandomUser
 import com.example.rawegg.R
+import timber.log.Timber
 
 @Composable
 fun RandomUserListView (
@@ -117,6 +118,7 @@ fun ProfileImg (
                     resource: Bitmap,
                     transition: Transition<in Bitmap>?
                 ) {
+                    Timber.i("로그::Glide Called")
                     bitmap.value = resource
                 }
                 override fun onLoadCleared (
@@ -127,6 +129,7 @@ fun ProfileImg (
     // 2021.06.25 suchang If it's not working you should check INTERNET Permition.
     // 2021.06.25 suchang How find R.drawable at the sub packages!!!
     //            import import com.example.rawegg.R
+    Timber.i("로그::Glide Called $bitmap")
     bitmap.value?.asImageBitmap()?.let { fetchedBitmap ->
         Image (
             bitmap = fetchedBitmap,
