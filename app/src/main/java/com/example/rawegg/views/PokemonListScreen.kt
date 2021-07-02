@@ -367,9 +367,6 @@ fun PokedexEntryImage (
 //        .clip(RoundedCornerShape(10.dp))
         .clip(CircleShape)
 
-    //Toast.makeText(LocalContext.current, "안녕", Toast.LENGTH_SHORT).show()
-    //Log.d(TAG,"ProfileImg::Glide")
-
     Glide.with(LocalContext.current)
         .asBitmap()
         .load(imgUrl)
