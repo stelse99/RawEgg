@@ -51,6 +51,7 @@ sealed class ScaryAnimation (
 }
 
 
+@ExperimentalMaterialApi
 @Composable
 fun BottomNavigationScreen() {
     val navController = rememberNavController()
@@ -71,6 +72,7 @@ fun BottomNavigationScreen() {
     }
 }
 
+@ExperimentalMaterialApi
 @Composable
 private fun RawEggNavigationActions (
     navController: NavHostController
@@ -89,7 +91,8 @@ private fun RawEggNavigationActions (
             PokemonListScreen(navController = navController)
         }
         composable(BottomNavigationMenu.Ghost.route) {
-            ScaryScreen(ScaryAnimation.Ghost)
+            //ScaryScreen(ScaryAnimation.Ghost)
+            TodoHomeView(navController = navController)
         }
         composable(BottomNavigationMenu.ScaryBag.route) {
             //ScaryScreen(ScaryAnimation.ScaryBag)
@@ -123,6 +126,11 @@ private fun RawEggNavigationActions (
             )
         }
         // Sub Navigations End
+        //TodoList Start
+        composable("todo_home") { TodoHomeView(navController = navController) }
+        composable("todo_add") { TodoAddView(navController = navController) }
+        //TodoList End
+
     }
 }
 

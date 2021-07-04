@@ -340,13 +340,14 @@ fun PokedexEntry(
                 ){
                     dominantColor = it
                 }
-
+                Spacer(modifier = Modifier.height(50.dp))
                 Text(
                     text = entry.pokemonName,
                     fontFamily = RobotoCondensed,
                     fontSize = 20.sp,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                 )
             }
         }
