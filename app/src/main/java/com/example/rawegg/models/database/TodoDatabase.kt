@@ -24,7 +24,7 @@ abstract class TodoDatabase : RoomDatabase() {
                         TodoDatabase::class.java,
                         "todo_list_database"
                     ).fallbackToDestructiveMigration()
-                        .build()
+                     .build()
 
                     INSTANCE = instance
                 }

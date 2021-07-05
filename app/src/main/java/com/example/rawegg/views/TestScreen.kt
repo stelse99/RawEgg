@@ -112,15 +112,83 @@ private fun Content() {
 @Composable
 fun SimpleButtonComponent() {
     val context = LocalContext.current
-    Button(
-        onClick = {
-            Toast.makeText(context, "Thanks for clicking! I am Button", Toast.LENGTH_SHORT).show()
-        },
-        modifier = Modifier
-            .padding(16.dp)
-            .fillMaxWidth()
+
+    Column(
+        Modifier
+            .background(Color(0xFFEDEAE0))
+            .fillMaxSize()
+            .padding(32.dp),
+        verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
-        Text("Click Me Now")
+        Button(
+            onClick = {
+                // do something here
+            },
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = Color(0xFFFF2400),
+                contentColor = Color(0xFFFFF5EE),
+                disabledBackgroundColor = Color(0xFF59260B),
+                disabledContentColor = Color(0xFF8A795D)
+            ),
+            enabled = true
+        ) {
+            Text(text = "Verify Me")
+        }
+
+        Button(
+            onClick = {
+                // do something here
+            },
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = Color(0xFFFF2400),
+                contentColor = Color(0xFFFFF5EE),
+                disabledBackgroundColor = Color(0xFF59260B),
+                disabledContentColor = Color(0xFF8A795D)
+            ),
+            enabled = false
+        ) {
+            Text(text = "Verify Me")
+        }
+
+        TextButton(
+            onClick = {
+                // do something here
+            },
+            colors = ButtonDefaults.textButtonColors(
+                backgroundColor = Color(0xFFFAD6A5),
+                contentColor = Color(0xFFA83731),
+                disabledContentColor = Color(0xFFD2B48C)
+            ),
+            enabled = true
+        ) {
+            Text(text = "Share Me")
+        }
+
+        OutlinedButton(
+            onClick = {
+                // do something here
+            },
+            colors = ButtonDefaults.outlinedButtonColors(
+                backgroundColor = Color(0xFF4C2882),
+                contentColor = Color(0xFFECEBBD),
+                disabledContentColor = Color(0xFF914E75)
+            ),
+            enabled = true
+        ) {
+            Text(text = "Share Location")
+        }
+
+
+        Button(
+            onClick = {
+                Toast.makeText(context, "Thanks for clicking! I am Button", Toast.LENGTH_SHORT).show()
+            },
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth()
+        ) {
+            Text("Click Me Now")
+        }
     }
 }
 
@@ -170,6 +238,8 @@ fun SimpleCardComponent() {
         )
     }
 }
+
+
 
 
 @Composable

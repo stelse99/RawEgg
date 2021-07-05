@@ -2,6 +2,7 @@ package com.example.rawegg.views
 
 import android.app.Application
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.*
@@ -9,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
@@ -48,7 +50,7 @@ fun TodoAddView(navController: NavController) {
         floatingActionButtonPosition = FabPosition.End,
         modifier = Modifier
             .fillMaxHeight(.9f)
-    ) {
+        ) {
         InputFieldState(inputViewModel)
     }
 }
@@ -58,7 +60,10 @@ fun InputFieldState(inputViewModel: InputViewModel) {
     val todo: String by inputViewModel.todo.observeAsState("")
 
     Column(
-        modifier = Modifier.padding(16.dp)
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .background(color = Color.Black)
     ) {
         InputField(todo) {
             inputViewModel.onInputChange(it)
