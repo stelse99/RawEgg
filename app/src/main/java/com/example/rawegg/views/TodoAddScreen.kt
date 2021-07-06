@@ -13,7 +13,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -50,7 +54,7 @@ fun TodoAddView(navController: NavController) {
         floatingActionButtonPosition = FabPosition.End,
         modifier = Modifier
             .fillMaxHeight(.9f)
-        ) {
+    ) {
         InputFieldState(inputViewModel)
     }
 }
@@ -80,29 +84,49 @@ fun InputField(
     val focusManager = LocalFocusManager.current
 
     if (onValChange != null) {
-        TextField(
-            value = name,
-            placeholder = { Text(text = "Enter todo") },
+        Box(
             modifier = Modifier
-                .padding(all = 16.dp)
-                .fillMaxWidth(),
-            onValueChange = onValChange,
-            singleLine = true,
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    focusManager.clearFocus()
-                }
-            ),
-        )
+                .width(400.dp)
+        ) {
+            TextField(
+                value = name,
+                placeholder = { Text(text = "Enter todo") },
+                modifier = Modifier
+                    .background(Color.DarkGray),
+                textStyle = TextStyle(
+                    fontSize = 20.sp,
+                    color = Color.White,
+                    fontWeight = FontWeight.Light
+                ),
+                onValueChange = onValChange,
+                singleLine = true,
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        focusManager.clearFocus()
+                    }
+                ),
+            )
+        }
     }
 }
 
 @Composable
 fun ExtendedFAB(onClick: () -> Unit) {
     ExtendedFloatingActionButton(
-        text = { Text("Save Todo") },
+        text = {
+            Text(
+                text = "Save Todo",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Light,
+            )
+        },
+        backgroundColor = Color(0xff24191c),
+        contentColor = Color.White,
         onClick = onClick,
-        elevation = FloatingActionButtonDefaults.elevation(8.dp)
+        elevation = FloatingActionButtonDefaults.elevation(
+            defaultElevation = 10.dp,
+            pressedElevation = 20.dp,
+        )
     )
 }
 

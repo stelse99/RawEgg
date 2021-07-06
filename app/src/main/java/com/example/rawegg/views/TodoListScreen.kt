@@ -133,7 +133,7 @@ fun CustomCardState(
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = Color(0xff24191c),
                     contentColor = Color.White,
-                ) ,
+                ),
                 elevation = ButtonDefaults.elevation(
                     defaultElevation = 10.dp,
                     pressedElevation = 20.dp,
