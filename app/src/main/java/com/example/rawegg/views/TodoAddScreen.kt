@@ -4,8 +4,12 @@ import android.app.Application
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -14,13 +18,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.rawegg.models.database.TodoItem
@@ -52,8 +52,12 @@ fun TodoAddView(navController: NavController) {
 
         },
         floatingActionButtonPosition = FabPosition.End,
-        modifier = Modifier
-            .fillMaxHeight(.9f)
+        // 2021-07-06 suchan Main bottomBar 에 가려져서 임의로 추가 한 것임.
+        bottomBar = {
+            BottomAppBar(backgroundColor = Color.Black) {
+                Text("")
+            }
+        }
     ) {
         InputFieldState(inputViewModel)
     }
@@ -84,29 +88,32 @@ fun InputField(
     val focusManager = LocalFocusManager.current
 
     if (onValChange != null) {
-        Box(
+        TextField(
+            value = name,
+            placeholder = {
+                Text(text = "Enter todo")
+            },
             modifier = Modifier
-                .width(400.dp)
-        ) {
-            TextField(
-                value = name,
-                placeholder = { Text(text = "Enter todo") },
-                modifier = Modifier
-                    .background(Color.DarkGray),
-                textStyle = TextStyle(
-                    fontSize = 20.sp,
-                    color = Color.White,
-                    fontWeight = FontWeight.Light
-                ),
-                onValueChange = onValChange,
-                singleLine = true,
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        focusManager.clearFocus()
-                    }
-                ),
-            )
-        }
+                .fillMaxWidth()
+                .background(
+                    Color(0xff24191c),
+                    RoundedCornerShape(12.dp)
+                )
+                .padding(10.dp),
+            textStyle = TextStyle(
+                fontSize = 20.sp,
+                color = Color.White,
+                fontWeight = FontWeight.Light,
+            ),
+            onValueChange = onValChange,
+            maxLines = 5,
+            singleLine = false,
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    focusManager.clearFocus()
+                }
+            ),
+        )
     }
 }
 
@@ -116,17 +123,27 @@ fun ExtendedFAB(onClick: () -> Unit) {
         text = {
             Text(
                 text = "Save Todo",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Light,
+                modifier = Modifier
+                    .background(Color(0xff24191c)),
+                style = TextStyle(
+                    fontSize = 20.sp,
+                    color = Color.White,
+                    fontWeight = FontWeight.Light
+                ),
             )
         },
         backgroundColor = Color(0xff24191c),
-        contentColor = Color.White,
         onClick = onClick,
         elevation = FloatingActionButtonDefaults.elevation(
             defaultElevation = 10.dp,
             pressedElevation = 20.dp,
-        )
+        ),
+        icon = {
+            Icon(
+                Icons.Filled.Add,"",
+                tint = Color.White
+            )
+        }
     )
 }
 

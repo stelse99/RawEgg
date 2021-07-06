@@ -144,7 +144,11 @@ fun CustomCardState(
             ) {
                 Text(
                     text = "Add Todo",
-                    fontSize = 20.sp,
+                    style = TextStyle(
+                        fontSize = 20.sp,
+                        color = Color.White,
+                        fontWeight = FontWeight.Light
+                    ),
                 )
             }
             Button(
@@ -156,7 +160,11 @@ fun CustomCardState(
             ) {
                 Text(
                     text = "Clear all",
-                    fontSize = 20.sp,
+                    style = TextStyle(
+                        fontSize = 20.sp,
+                        color = Color.White,
+                        fontWeight = FontWeight.Light
+                    ),
                 )
             }
         }
