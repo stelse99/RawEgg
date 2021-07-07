@@ -106,8 +106,8 @@ fun InputField(
                 fontWeight = FontWeight.Light,
             ),
             onValueChange = onValChange,
-            maxLines = 5,
-            singleLine = false,
+            maxLines = 1,
+            singleLine = true,
             keyboardActions = KeyboardActions(
                 onDone = {
                     focusManager.clearFocus()
