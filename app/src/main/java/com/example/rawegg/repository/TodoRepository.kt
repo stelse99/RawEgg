@@ -5,7 +5,9 @@ import com.example.rawegg.models.database.TodoDatabaseDao
 import com.example.rawegg.models.database.TodoItem
 
 
-class TodoRepository(private val todoDatabaseDao: TodoDatabaseDao) {
+class TodoRepository(
+    private val todoDatabaseDao: TodoDatabaseDao
+) {
 
     val readAllData : LiveData<List<TodoItem>> = todoDatabaseDao.getAll()
 
