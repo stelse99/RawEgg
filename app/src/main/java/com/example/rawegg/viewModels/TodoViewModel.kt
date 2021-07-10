@@ -9,8 +9,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-class TodoViewModel(application: Application) : AndroidViewModel(application) {
-
+class TodoViewModel(
+    application: Application
+) : AndroidViewModel(application)
+{
     val readAllData: LiveData<List<TodoItem>>
     private val repository: TodoRepository
 
@@ -48,7 +50,8 @@ class TodoViewModel(application: Application) : AndroidViewModel(application) {
 
 class TodoViewModelFactory(
     private val application: Application
-) : ViewModelProvider.Factory {
+) : ViewModelProvider.Factory
+{
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
         if (modelClass.isAssignableFrom(TodoViewModel::class.java)) {
