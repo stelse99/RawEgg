@@ -38,7 +38,8 @@ import com.example.rawegg.viewModels.TodoViewModelFactory
 fun TodoHomeView(navController: NavController) {
     val context = LocalContext.current
     val todoViewModel: TodoViewModel = viewModel(
-        factory = TodoViewModelFactory(context.applicationContext as Application)
+        factory = TodoViewModelFactory(
+            context.applicationContext as Application)
     )
 
     val items = todoViewModel.readAllData.observeAsState(listOf()).value
