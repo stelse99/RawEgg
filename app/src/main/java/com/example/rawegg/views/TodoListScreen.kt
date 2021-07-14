@@ -80,7 +80,9 @@ fun TodoList(
 
     LazyColumn {
         items(list) { todo ->
-            val name = rememberSaveable { mutableStateOf(todo.isDone) }
+            val name = rememberSaveable {
+                mutableStateOf(todo.isDone)
+            }
 
             ListItem(
                 text = { Text(text = todo.itemName) },
