@@ -42,7 +42,8 @@ fun TodoHomeView(navController: NavController) {
             context.applicationContext as Application)
     )
 
-    val items = todoViewModel.readAllData.observeAsState(listOf()).value
+    val items = todoViewModel.readAllData
+        .observeAsState(listOf()).value
 
     Column(
         modifier = Modifier
