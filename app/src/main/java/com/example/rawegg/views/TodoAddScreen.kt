@@ -54,7 +54,9 @@ fun TodoAddView(navController: NavController) {
         floatingActionButtonPosition = FabPosition.End,
         // 2021-07-06 suchan Main bottomBar 에 가려져서 임의로 추가 한 것임.
         bottomBar = {
-            BottomAppBar(backgroundColor = Color.Black) {
+            BottomAppBar(
+                backgroundColor = Color.Black
+            ) {
                 Text("")
             }
         }
